@@ -5,20 +5,22 @@ import CustomerModel from "../../../infrastructure/customer/repository/sequelize
 import CustomerRepository from "../../../infrastructure/customer/repository/sequelize/customer.repository";
 import FindCustomerUseCase from "./find.customer.usecase";
 
+
 const customer = new Customer("123", "John");
 const address = new Address("Street", 123, "Zip", "City");
 customer.changeAddress(address);
-
+  
 const MockRepository = () => {
   return {
-    find: jest.fn().mockReturnValue(Promise.resolve(customer)),
-    findAll: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
+    find: jest.fn().mockReturnValue(Promise.resolve(customer)),
+    findAll: jest.fn(),
   };
-};
+}
 
-describe("Unit Test find customer use case", () => {
+describe("Unit Test find customer use case", () => { 
+
   it("should find a customer", async () => {
     const customerRepository = MockRepository();
     const usecase = new FindCustomerUseCase(customerRepository);
@@ -47,7 +49,7 @@ describe("Unit Test find customer use case", () => {
     const customerRepository = MockRepository();
     customerRepository.find.mockImplementation(() => {
       throw new Error("Customer not found");
-    });
+    })
     const usecase = new FindCustomerUseCase(customerRepository);
 
     const input = {
@@ -57,5 +59,6 @@ describe("Unit Test find customer use case", () => {
     expect(() => {
       return usecase.execute(input);
     }).rejects.toThrow("Customer not found");
+
   });
 });
